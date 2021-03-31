@@ -1,0 +1,31 @@
+version: "3" 
+services:
+  web_twitterwsl:
+    image: alexrogna/twitterwsl_web:prod
+    expose:
+      - 3000
+    env_file:
+      - .env/production/database_twitterwsl
+      - .env/production/web_twitterwsl
+    environment:
+      - VIRTUAL_HOST=twitterwsl.alexrogna.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=twitterwsl.alexrogna.com
+    restart: always
+
+  database_twitterwsl:
+    image: postgres
+    env_file:
+      - .env/production/database_twitterwsl
+    volumes:
+      - db_data_twitterwsl:/var/lib/postgresql/data
+    restart: always
+    
+  db-migrator_twitterwsl:
+    image: alexrogna/twitterwsl_web:prod
+    command: ["./wait-for", "--timeout=300", "database_twitterwsl:5432", "--", "bin/rails", "db:create" , "db:migrate"]
+    env_file:
+      - .env/production/database_twitterwsl
+      - .env/production/web_twitterwsl
+volumes:
+  db_data_twitterwsl:

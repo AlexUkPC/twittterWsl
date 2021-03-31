@@ -1,0 +1,44 @@
+version: "3"
+services:
+  web_twitterwsl:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    ports:
+      - "3005:3000"
+    volumes: 
+      - ./twitterwsl:/opt/app
+      - gem_cache_twitterwsl:/gems
+    env_file: 
+      - .env/development/database_twitterwsl
+      - .env/development/web_twitterwsl
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_twitterwsl
+  webpack_dev_server_twitterwsl:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    command: ./bin/webpack-dev-server
+    ports: 
+      - "3040:3040"
+    volumes: 
+      - ./twitterwsl:/opt/app
+      - gem_cache_twitterwsl:/gems
+    env_file: 
+      - .env/development/database_twitterwsl
+      - .env/development/web_twitterwsl
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+  database_twitterwsl:
+    image: postgres
+    env_file: 
+      - .env/development/database_twitterwsl
+    volumes: 
+      - db_data_twitterwsl:/var/lib/postgresql/data
+volumes: 
+  db_data_twitterwsl:
+  gem_cache_twitterwsl:
