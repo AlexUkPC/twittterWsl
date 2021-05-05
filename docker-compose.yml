@@ -16,6 +16,8 @@ services:
       - .env/development/web_twitterwsl
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_twitterwsl
+    networks:
+      - network
   webpack_dev_server_twitterwsl:
     build:
       context: .
@@ -33,12 +35,18 @@ services:
       - .env/development/web_twitterwsl
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    networks:
+      - network
   database_twitterwsl:
     image: postgres
     env_file: 
       - .env/development/database_twitterwsl
     volumes: 
       - db_data_twitterwsl:/var/lib/postgresql/data
+    networks:
+      - network
 volumes: 
   db_data_twitterwsl:
   gem_cache_twitterwsl:
+networks:
+  network:
