@@ -26,7 +26,7 @@ services:
         GROUP_ID: "${GROUP_ID:-1000}"
     command: ./bin/webpack-dev-server
     ports: 
-      - "3040:3040"
+      - "4005:4005"
     volumes: 
       - ./twitterwsl:/opt/app
       - gem_cache_twitterwsl:/gems
